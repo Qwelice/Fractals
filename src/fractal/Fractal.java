@@ -6,7 +6,7 @@ import math.Complex;
 public interface Fractal {
     /** Метод, проверяющий принадлежность точки множеству фрактала
      * @param c проверяемая точка
-     * @return true если, принадлежит, иначе false
+     * @return true если принадлежит, иначе false
      * */
     boolean isInSet(Complex c);
 }
