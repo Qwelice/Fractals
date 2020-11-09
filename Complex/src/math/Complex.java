@@ -1,3 +1,5 @@
+package math;
+
 public class Complex {
     private double re;
     private double im;
@@ -47,16 +49,6 @@ public class Complex {
         return this;
     }
 
-    /**
-     * Метод вычитания комплексных чисел с присвоением результата сложения левому числу
-     * @param other второе комплексное число
-     * @return  левое комплексное число с измененными значениями
-     */
-    public Complex minusAssign(Complex other){
-        re -= other.re;
-        im -= other.im;
-        return this;
-    }
 
     /**
      * Метод вычитания для комплексных чисел
@@ -68,6 +60,17 @@ public class Complex {
                 re - other.re,
                 im - other.im
         );
+    }
+
+    /**
+     * Метод вычитания комплексных чисел с присвоением результата сложения левому числу
+     * @param other второе комплексное число
+     * @return  левое комплексное число с измененными значениями
+     */
+    public Complex minusAssign(Complex other){
+        re -= other.re;
+        im -= other.im;
+        return this;
     }
 
     /**
@@ -83,6 +86,19 @@ public class Complex {
     }
 
     /**
+     * Метод умножения комплексных чисел с присвоением результата умножения левому числу
+     * @param other второе комплексное число
+     * @return  левое комплексное число с измененными значениями
+     */
+    public Complex timesAssign(Complex other){
+        var r = re * other.re - im * other.im;
+        var i = re * other.im + im * other.re;
+        re = r;
+        im = i;
+        return this;
+    }
+
+    /**
      * Оператор деления комплексных чисел
      * @param other комплексное число - делитель
      * @return частное от деления делимого числа на делитель
@@ -95,6 +111,21 @@ public class Complex {
         double i = (im * other.re - re * other.im) / zn;
 
         return new Complex(r, i);
+    }
+
+    /**
+     * Метод деления комплексных чисел с присвоением результата деления левому числу
+     * @param other второе комплексное число
+     * @return  левое комплексное число с измененными значениями
+     */
+    public Complex divAssign(Complex other){
+        //Вычисление знаменателя
+        double zn = other.re * other.re + other.im * other.im;
+
+        re = (re * other.re + im * other.im) / zn;
+        im = (im * other.re - re * other.im) / zn;
+
+        return this;
     }
 
     /**
