@@ -9,8 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class MyWindow extends JFrame {
     GraphicsPanel mainPanel;
@@ -21,7 +19,7 @@ public class MyWindow extends JFrame {
     public MyWindow(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setMinimumSize(MIN_FRAME_SIZE);
-        setTitle("Полиномы");
+        setTitle("Fractal");
 
         mainPanel = new GraphicsPanel();
 
@@ -58,12 +56,6 @@ public class MyWindow extends JFrame {
             public void componentResized(ComponentEvent e) {
                 plane.setRealWidth(mainPanel.getWidth());
                 plane.setRealHeight(mainPanel.getHeight());
-            }
-        });
-        mainPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //mainPanel.repaint();
             }
         });
     }
