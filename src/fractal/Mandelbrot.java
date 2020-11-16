@@ -38,17 +38,18 @@ public class Mandelbrot implements Fractal {
      * @return true если точка с принадлежит множеству, иначе false
      * */
     @Override
-    public boolean isInSet(Complex c) {
+    public float isInSet(Complex c) {
         //z0 = 0 по условию формулы, конструктор по умолчанию устанавливает (0, 0)
         var z = new Complex();
         for (int i = 0; i<maxIters; i++){
             //Выполнение z_(n+1) = (z_n)^2 + c
-            z.timesAssign(z).plusAssign(c);
+            z.timesAssign(z);
+            z.plusAssign(c);
 
             //Проверка |z_n| < R, но в данном случае происходит проверка: |z_n|^2 < R^2, тем сам упрощая вычисления
-            if (z.abs2() > r2) return false;
+            if (z.abs2() > r2) return (float)i/maxIters;
         }
-        return true;
+        return 1.0F;
 
     }
 }
