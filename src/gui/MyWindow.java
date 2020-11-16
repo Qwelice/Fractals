@@ -4,6 +4,8 @@ import convertation.ConvertPlane;
 import fractal.Mandelbrot;
 import gui.graphics.FractalPainter;
 import gui.graphics.components.GraphicsPanel;
+import gui.graphics.fractalcolors.ColorScheme;
+import gui.graphics.fractalcolors.Colorizer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +50,7 @@ public class MyWindow extends JFrame {
 
         var m = new Mandelbrot();
         var fp = new FractalPainter(plane, m);
-
+        fp.col = new ColorScheme();
         mainPanel.addPainter(fp);
 
         mainPanel.addComponentListener(new ComponentAdapter() {

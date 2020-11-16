@@ -4,6 +4,7 @@ import convertation.ConvertPlane;
 import convertation.Converter;
 import fractal.Fractal;
 import gui.graphics.components.Painter;
+import gui.graphics.fractalcolors.Colorizer;
 import math.Complex;
 
 import java.awt.*;
@@ -11,6 +12,8 @@ import java.awt.*;
 public class FractalPainter extends Painter {
     //поле, которое хранит в себе данные о декартовой плоскости
     private final ConvertPlane plane;
+
+    public Colorizer col;
 
     //поле, представляющий фрактал, который мы будем рисовать
     private final Fractal fractal;
@@ -45,7 +48,7 @@ public class FractalPainter extends Painter {
                 //проверяем точку с координатами (x, y) на принадлежность множеству фрактала
                 var is = fractal.isInSet(new Complex(x, y));
                 //если точка принадлежит, то закрашиваем пиксель чёрным цветом, иначе белым
-                Color c = (is)?Color.BLACK:Color.WHITE;
+                Color c = (col!=null) ? col.getColor(is) : ((is==1.0F)?Color.BLACK:Color.WHITE);
                 //устанавливаем цвет, которым будем закрашивать пиксель
                 graphics.setColor(c);
                 //закрашиваем пиксель
