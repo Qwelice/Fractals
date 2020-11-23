@@ -43,27 +43,22 @@ public class SelectionPainter {
         currentPoint = p;
         paint();
     }
+    public Point getStartPoint(){
+        return startPoint;
+    }
+    public Point getCurrentPoint(){
+        return currentPoint;
+    }
 
     private void paint(){
         if (isVisible && startPoint!=null && currentPoint!=null) {
             g.setXORMode(Color.WHITE);
             g.setColor(Color.BLACK);
-            if(startPoint.x < currentPoint.x && startPoint.y < currentPoint.y)
-                g.drawRect(startPoint.x, startPoint.y,
-                        currentPoint.x - startPoint.x,
-                        currentPoint.y - startPoint.y);
-            else if(startPoint.x < currentPoint.x && startPoint.y > currentPoint.y)
-                g.drawRect(startPoint.x, currentPoint.y,
-                        currentPoint.x - startPoint.x,
-                        startPoint.y - currentPoint.y);
-            else if(startPoint.x > currentPoint.x && startPoint.y > currentPoint.y)
-                g.drawRect(currentPoint.x, currentPoint.y,
-                        startPoint.x - currentPoint.x,
-                        startPoint.y - currentPoint.y);
-            else
-                g.drawRect(currentPoint.x, startPoint.y,
-                        startPoint.x - currentPoint.x,
-                        currentPoint.y - startPoint.y);
+            var x = Math.min(startPoint.x, currentPoint.x);
+            var y = Math.min(startPoint.y, currentPoint.y);
+            var dx = Math.max(startPoint.x, currentPoint.x);
+            var dy = Math.max(startPoint.y, currentPoint.y);
+            g.drawRect(x, y, dx - x, dy - y);
             g.setPaintMode();
         }
     }

@@ -2,11 +2,12 @@ package gui;
 
 import convertation.ConvertPlane;
 import fractal.Mandelbrot;
-import gui.graphics.FractalPainter;
+import gui.graphics.fractalpainter.FractalPainter;
 import gui.graphics.SelectionPainter;
 import gui.graphics.components.GraphicsPanel;
 import gui.graphics.fractalcolors.ColorScheme;
-import gui.graphics.fractalcolors.Colorizer;
+import gui.graphics.transformation.AreaState;
+import gui.graphics.transformation.Transformation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +48,7 @@ public class MyWindow extends JFrame {
                 mainPanel.getHeight(),
                 -2, 1, -1, 1
         );
-
+        var tr = new Transformation(plane);
         var m = new Mandelbrot();
         var fp = new FractalPainter(plane, m);
         fp.col = new ColorScheme();
@@ -70,13 +71,27 @@ public class MyWindow extends JFrame {
                 super.mousePressed(e);
                 sp.setVisible(true);
                 sp.setStartPoint(e.getPoint());
+                tr.addNewState(
+                        new Point(0, 0),
+                        new Point(mainPanel.getWidth()-1, mainPanel.getHeight()-1)
+                );
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                sp.setCurrentPoint(e.getPoint());
+                tr.addNewState(sp.getStartPoint(), sp.getCurrentPoint());
+                tr.executeLastState();
                 sp.setVisible(false);
+                mainPanel.repaint();
+            }
+        });
+        mainPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getButton() == MouseEvent.BUTTON3){
+                    tr.executeLastState();
+                }
             }
         });
 
