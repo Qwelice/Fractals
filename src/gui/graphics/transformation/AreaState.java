@@ -1,10 +1,5 @@
 package gui.graphics.transformation;
 
-import convertation.ConvertPlane;
-import convertation.Converter;
-
-import java.awt.*;
-
 public class AreaState {
     private double x1 = 0;
     private double y1 = 0;

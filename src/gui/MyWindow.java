@@ -6,6 +6,7 @@ import gui.graphics.fractalpainter.FractalPainter;
 import gui.graphics.SelectionPainter;
 import gui.graphics.components.GraphicsPanel;
 import gui.graphics.fractalcolors.ColorScheme;
+import gui.graphics.fractalpainter.ReadyToPaint;
 import gui.graphics.transformation.AreaState;
 import gui.graphics.transformation.Transformation;
 
@@ -54,6 +55,13 @@ public class MyWindow extends JFrame {
         fp.col = new ColorScheme();
         mainPanel.addPainter(fp);
         var sp = new SelectionPainter(mainPanel.getGraphics());
+
+        fp.addReadyListener(new ReadyToPaint() {
+            @Override
+            public void timeToPaint() {
+                mainPanel.repaint();
+            }
+        });
 
         mainPanel.addComponentListener(new ComponentAdapter() {
             @Override

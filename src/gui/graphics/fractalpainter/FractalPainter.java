@@ -18,6 +18,18 @@ public class FractalPainter extends Painter{
     private ArrayList<Thread> threads = new ArrayList<>();
     private ArrayList<FractalStripPainter> fsPainters = new ArrayList<>();
     public Colorizer col;
+    private int count = 0;
+    private BufferedImage readyImg = null;
+    private BufferedImage drawingImg = null;
+    private boolean repaint = true;
+
+    private ArrayList<ReadyToPaint> readyToPaint = new ArrayList<>();
+    public void addReadyListener(ReadyToPaint listener){
+        readyToPaint.add(listener);
+    }
+    public void removeReadyListener(ReadyToPaint listener){
+        readyToPaint.remove(listener);
+    }
 
     //поле, представляющий фрактал, который мы будем рисовать
     private final Fractal fractal;
@@ -43,26 +55,39 @@ public class FractalPainter extends Painter{
      * */
     public void drawFractal(Graphics graphics){
         var stripCount = Runtime.getRuntime().availableProcessors();
-        for(var fp : fsPainters){
-            fp.stop();
+        if(readyImg != null){
+            graphics.drawImage(readyImg, 0, 0, plane.getWidth(), plane.getHeight(), null);
+            if(!repaint){
+                repaint = true;
+                return;
+            }
         }
+        drawingImg = new BufferedImage(plane.getWidth(), plane.getHeight(), BufferedImage.TYPE_INT_RGB);
+        var g = drawingImg.getGraphics();
+        count = 0;
+        for(var f : fsPainters)
+            f.stop();
         fsPainters.clear();
         for(var t : threads){
             try{
                 t.join();
-            }catch (InterruptedException ex){ }
+            }catch (InterruptedException ex){}
         }
         threads.clear();
-        for(int i = 0; i < stripCount; i ++){
-            fsPainters.add(new FractalStripPainter(graphics, i, stripCount));
+        for(int i = 0; i < stripCount; i++){
+            fsPainters.add(new FractalStripPainter(g, i, stripCount));
             threads.add(new Thread(fsPainters.get(i)));
             threads.get(i).start();
         }
-        for(var t : threads){
-            try{
-                t.join();
-            }catch (InterruptedException ex){ }
-        }
+    }
+
+    private void toReadyState(){
+        readyImg = new BufferedImage(plane.getWidth(), plane.getHeight(), BufferedImage.TYPE_INT_RGB);
+        var gEnd = readyImg.getGraphics();
+        gEnd.drawImage(drawingImg,0, 0, null);
+        repaint = false;
+        for(var r : readyToPaint)
+            r.timeToPaint();
     }
 
     /** Переопределенный метод класса {@link Painter}, обновляющий данные декартовой плоскости
@@ -87,6 +112,7 @@ public class FractalPainter extends Painter{
         public FractalStripPainter(Graphics graphics, int stripIndex, int stripCount){
             this.graphics = graphics;
             this.stripIndex = stripIndex;
+            this.stripCount = stripCount;
             width = plane.getWidth() / stripCount;
             begPx = stripIndex * width;
             if(stripIndex == stripCount - 1) {
@@ -115,6 +141,11 @@ public class FractalPainter extends Painter{
                     var is = fractal.isInSet(new Complex(x, y));
                     //если точка принадлежит, то закрашиваем пиксель чёрным цветом, иначе белым
                     Color c = (col!=null) ? col.getColor(is) : ((is==1.0F)?Color.BLACK:Color.WHITE);
+//                    Graphics2D G2D = (Graphics2D)g;
+//                    G2D.setRenderingHint(
+//                            RenderingHints.KEY_ANTIALIASING,
+//                            RenderingHints.VALUE_ANTIALIAS_ON
+//                    );
                     //устанавливаем цвет, которым будем закрашивать пиксель
                     g.setColor(c);
                     //закрашиваем пиксель
@@ -122,8 +153,16 @@ public class FractalPainter extends Painter{
                 }
             }
             synchronized (graphics){
+                Graphics2D G2D = (Graphics2D)graphics;
+                G2D.setRenderingHint(
+                        RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON
+                );
                 graphics.drawImage(bImg, begPx, 0, null);
             }
+            count++;
+            if(count == stripCount)
+                toReadyState();
         }
     }
 }

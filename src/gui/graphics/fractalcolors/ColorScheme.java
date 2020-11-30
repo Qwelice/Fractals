@@ -9,6 +9,6 @@ public class ColorScheme implements Colorizer {
         r = (float)Math.abs(Math.sin(54+17*x)*Math.cos(11-21*(1-x)));
         g = (float)Math.abs(Math.sin(22-14*x)*Math.sin(45-17*(x)));
         b = (float)Math.abs(Math.cos(11+5*(1-x)));
-        return new Color(r, g, b);
+        return new Color(r, g, b, 1-x);
     }
 }
