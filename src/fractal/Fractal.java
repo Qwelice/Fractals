@@ -8,5 +8,5 @@ public interface Fractal {
      * @param c проверяемая точка
      * @return true если принадлежит, иначе false
      * */
-    boolean isInSet(Complex c);
+    float isInSet(Complex c);
 }

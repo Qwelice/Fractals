@@ -1,7 +1,20 @@
 package math;
 
+import java.lang.StringBuilder;
+
+/**
+ * Класс для работы с комплексными числами
+ */
 public class Complex {
+
+    /**
+     * Вещественная часть комплексного числа
+     */
     private double re;
+
+    /**
+     * Мнимая часть комплексного числа
+     */
     private double im;
 
     /**
@@ -39,16 +52,13 @@ public class Complex {
     }
 
     /**
-     * Метод сложения комплексных чисел с присвоением результата сложения левому числу
-     * @param other второе комплексное число
-     * @return  левое комплексное число с измененными значениями
+     * Метод сложения с присвоением для комплексных чисел
+     * @param other прибавляемое комплексное число
      */
-    public Complex plusAssign(Complex other){
+    public void plusAssign(Complex other){
         re += other.re;
         im += other.im;
-        return this;
     }
-
 
     /**
      * Метод вычитания для комплексных чисел
@@ -63,14 +73,12 @@ public class Complex {
     }
 
     /**
-     * Метод вычитания комплексных чисел с присвоением результата вычитания левому числу
-     * @param other второе комплексное число
-     * @return  левое комплексное число с измененными значениями
+     * Метод вычитания для комплексных чисел с присвоением
+     * @param other вычитаемое комплексное число
      */
-    public Complex minusAssign(Complex other){
+    public void minusAssign(Complex other) {
         re -= other.re;
         im -= other.im;
-        return this;
     }
 
     /**
@@ -86,16 +94,13 @@ public class Complex {
     }
 
     /**
-     * Метод умножения комплексных чисел с присвоением результата умножения левому числу
-     * @param other второе комплексное число
-     * @return  левое комплексное число с измененными значениями
+     * Оператор умножения с присвоением
+     * @param other второе комплексное число для умножения
      */
-    public Complex timesAssign(Complex other){
-        var r = re * other.re - im * other.im;
-        var i = re * other.im + im * other.re;
-        re = r;
-        im = i;
-        return this;
+    public void timesAssign(Complex other) {
+        var temp_re = re * other.re - im * other.im;
+        im = re * other.im + im * other.re;
+        re = temp_re;
     }
 
     /**
@@ -114,18 +119,16 @@ public class Complex {
     }
 
     /**
-     * Метод деления комплексных чисел с присвоением результата деления левому числу
-     * @param other второе комплексное число
-     * @return  левое комплексное число с измененными значениями
+     * Оператор деления комплексных чисел с присвоением
+     * @param other комплексное число - делитель
      */
-    public Complex divAssign(Complex other){
+    public void divAssign(Complex other){
         //Вычисление знаменателя
         double zn = other.re * other.re + other.im * other.im;
 
-        re = (re * other.re + im * other.im) / zn;
+        double r = (re * other.re + im * other.im) / zn;
         im = (im * other.re - re * other.im) / zn;
-
-        return this;
+        re = r;
     }
 
     /**
@@ -167,8 +170,8 @@ public class Complex {
         // Если вещественная часть не нулевая,
         // а также если мнимая - нулевая
         if (neq(re, 0) || eq(im, 0))
-            // Добавляем вещественную часть в выод
-            s.append(re);
+        // Добавляем вещественную часть в выод
+        s.append(re);
         // Если мнимая часть не нулевая
         if (neq(im, 0)) {
             //Добавляем знак (+ или -)
@@ -192,12 +195,25 @@ public class Complex {
         return new Complex(re, im);
     }
 
+    /**
+     * Сравнение двух вещественных чисел на равенство
+     * @param d1 первое вещественное число для сравнения
+     * @param d2 второе вещественное число для сравнения
+     * @return true, если числа можно считать равными и false, если числа не равны
+     */
     private static Boolean eq(double d1, double d2){
         return Math.abs(d1 - d2) <
                 Math.max(Math.ulp(d1), Math.ulp(d2)) * 2;
     }
 
+    /**
+     * Сравнение двух вещественных чисел на неравенство
+     * @param d1 первое вещественное число для сравнения
+     * @param d2 второе вещественное число для сравнения
+     * @return true, если числа не равны и false, если числа можно считать равными
+     */
     private static Boolean neq(double d1, double d2){
         return !eq(d1, d2);
     }
+
 }
